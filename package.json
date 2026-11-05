@@ -1,0 +1,44 @@
+{
+  "name": "koto",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Koto — ton agent personnel IA sur Telegram, qui comprend sur quoi tu travailles et ce qui compte pour toi.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.build.json",
+    "cli": "tsx src/cli.ts",
+    "doctor": "tsx src/doctor.ts",
+    "backup": "tsx src/backup-now.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --project integration --project system",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:system": "vitest run --project system",
+    "test:live": "KOTO_LIVE=1 vitest run --project live"
+  },
+  "dependencies": {
+    "@1password/sdk": "^0.5.0",
+    "@anthropic-ai/sdk": "^0.134.0",
+    "@composio/core": "^0.24.0",
+    "@grammyjs/runner": "^2.0.3",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "better-sqlite3": "^13.0.3",
+    "grammy": "^1.46.0",
+    "luxon": "^3.7.2",
+    "playwright": "^1.64.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}

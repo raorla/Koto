@@ -1,0 +1,39 @@
+# Service systemd de Koto : il démarre avec le serveur et redémarre tout seul après un plantage.
+# Installé et mis à jour par deploy/deploy.sh (voir « Déployer 24/7 » dans le README).
+[Unit]
+Description=Koto, agent personnel IA sur Telegram
+Wants=network-online.target
+After=network-online.target
+# Pas de plafond de redémarrages : après une coupure réseau, Koto réessaie jusqu'à ce que ça reparte.
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=koto
+Group=koto
+WorkingDirectory=/home/koto/koto
+# Koto lit lui-même le fichier .env de ce dossier (sur un serveur : KOTO_BROWSER_HEADED=off,
+# KOTO_BROWSER_CHANNEL=chromium et OP_ACCOUNT vide, voir le README).
+ExecStart=/usr/bin/node dist/index.js
+Environment=NODE_ENV=production
+Restart=always
+RestartSec=10
+# Arrêt propre : sur SIGTERM, Koto coupe le polling et ferme la base.
+TimeoutStopSec=30
+
+# Garde-fous : Koto ouvre des sites web dans Chromium, il tourne sans droits d'administration.
+# La base, les sauvegardes et les profils du navigateur ne sont lisibles que par l'utilisateur koto.
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+# Une page trop lourde ne peut pas faire tomber toute la machine (SSH compris).
+MemoryMax=80%
+
+[Install]
+WantedBy=multi-user.target
